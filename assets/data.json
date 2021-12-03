@@ -1,0 +1,37 @@
+{
+  "stern": {
+    "title": "Be a star",
+    "text": "Be a star like the HOFF!",
+    "sound": "./assets/pling.mp3"
+  },
+  "kugel1": {
+    "title": "Kugel 1",
+    "text": "Das ist die Kugel 1. Merry Hoffmass!",
+    "sound": "./assets/pling.mp3"
+  },
+  "Kugel2": {
+    "title": "Kugel 2",
+    "text": "Das ist die Kugel 2. Merry Hoffmass!",
+    "sound": "./assets/pling.mp3"
+  },
+  "kugel3": {
+    "title": "Kugel 3",
+    "text": "Das ist die Kugel 3. Merry Hoffmass!",
+    "sound": "./assets/plong.mp3"
+  },
+  "kugel4": {
+    "title": "Kugel 4",
+    "text": "Das ist die Kugel 4. Merry Hoffmass!",
+    "sound": "./assets/pling.mp3"
+  },
+  "kugel5": {
+    "title": "Kugel 5",
+    "text": "Das ist die Kugel 5. Merry Hoffmass!",
+    "sound": "./assets/plong.mp3"
+  },
+  "kugel6": {
+    "title": "Kugel 6",
+    "text": "Das ist die Kugel 6. Merry Hoffmass!",
+    "sound": "./assets/plong.mp3"
+  }
+}

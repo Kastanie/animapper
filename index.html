@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Animapper Example</title>
+    <link rel="stylesheet" href="./css/animapper.css" />
+
+</head>
+
+<body>
+
+    <div id="map">Loading Map</div>
+
+    <div id="modal" class="w-modal">
+        <div class="w-modal-content">
+            <div class="w-container">
+                <span class="w-close" role="button"
+                    onclick="document.getElementById('modal').style.display='none'">&times;</span>
+                <h1 attribute="title">Titel</h1>
+                <p attribute="text"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/Animapper.js"></script>
+    <script>
+        var am = new Animapper('./assets/example.svg', './assets/data.json', document.getElementById("map"),
+            function (e) {
+                console.log(e);
+
+                var modal = document.getElementById('modal');
+
+
+                if ("data" in e) {
+                    if (e.data != null) {
+                        for (var attr in e.data) {
+
+                            var obj = modal.querySelectorAll(`[attribute*="` + attr + `"]`);
+                            console.log(obj, e.data[attr]);
+                            if (obj.length) {
+                                obj[0].innerHTML = e.data[attr];
+                            }
+                        }
+                        if ("sound" in e.data) {
+                            if (e.data.sound.indexOf('.mp3') != -1) {
+                                var audio = new Audio(e.data.sound);
+                                audio.play();
+                            }
+                        }
+                        modal.style.display = "block";
+                    }
+
+
+                }
+
+            }
+        );
+    </script>
+
+</body>
+
+</html>
