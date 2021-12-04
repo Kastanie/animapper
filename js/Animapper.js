@@ -18,10 +18,14 @@ class Animapper {
     this._load();
   }
 
+  /**
+   * Load the svg-Graphic
+   */
   _load() {
     this.loading = true;
+
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", this.svg, false);
+    xhr.open("GET", this.svg, true);
     xhr.overrideMimeType("image/svg+xml");
     var controller = this;
     xhr.onload = function (e) {
@@ -30,9 +34,24 @@ class Animapper {
       controller.graphic = svg;
       controller._onSVGLoaded();
     };
+    xhr.onprogress = function (e) {
+      console.log(e);
+      if (e.lengthComputable) {
+        var percentComplete = Math.floor((e.loaded / e.total) * 100);
+        controller.element.innerHTML =
+          '<progress id="progressbar" value="' +
+          percentComplete +
+          '" max="100"></progress>';
+      }
+    };
     xhr.send("");
   }
 
+  /**
+   * Loads the data from JSON
+   * @param {string} path JSON-Path
+   * @param {function} success Callback, if JSON was loaded
+   */
   _loadJSON(path, success) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -48,17 +67,28 @@ class Animapper {
     xhr.send();
   }
 
+  /**
+   * Handles an element-click
+   * @param {HTMLElement} element clicked element
+   */
   _interactiveClick(element) {
     if (this.onClick != undefined) {
       this.onClick(element);
     }
   }
 
+  /**
+   * Gets the data from a id
+   * @param {string} id
+   * @returns {Object} object from json
+   */
   getDataByElementId(id) {
+    //Replacing mysterious Illustrator-Signs
     var id = id.replace("x5F_", "");
     if (id in this.data) {
       return this.data[id];
     }
+    //Try to get the name without _animated or _interactive
     id = id.split("_")[0];
     if (id in this.data) {
       return this.data[id];
@@ -66,24 +96,29 @@ class Animapper {
     return null;
   }
 
+  /**
+   * Called after SVG was loaded
+   */
   _onSVGLoaded() {
-    console.log("SVG geladen: ", this.graphic);
     this.element.classList.add("complete");
     this.element.innerHTML = "";
     this.element.appendChild(this.graphic);
     var controller = this;
     this._loadJSON(this.datapath, function (data) {
       controller.data = data;
-      console.log("JSON geladen: ", data);
       controller._process();
     });
   }
 
+  /**
+   * Handles animations and interactives
+   */
   _process() {
     this.interactives = document.querySelectorAll(`[id*="_interactive"]`);
     this.animations = document.querySelectorAll(`[id*="_animated"]`);
 
     var controller = this;
+    //Interactives
     for (var i = 0; i < this.interactives.length; i++) {
       var data = controller.getDataByElementId(this.interactives[i].id);
       var ai = new AnimapperInteractive(
@@ -95,7 +130,7 @@ class Animapper {
       );
       ai.parent = this;
     }
-
+    //Animations
     for (i = 0; i < this.animations.length; i++) {
       var am = new AnimapperAnimation(this.animations[i]);
       am.parent = this;
@@ -103,6 +138,10 @@ class Animapper {
   }
 }
 
+/**
+ * Subclass handling interactive-SVG-Objects
+ * @hint for accessibility it adds title (if existing), button-role and tabindex
+ */
 class AnimapperInteractive {
   constructor(element, onClick, data) {
     this.data = data;
@@ -111,10 +150,10 @@ class AnimapperInteractive {
     if (data) {
       if ("title" in data) {
         this.element.setAttribute("title", data.title);
-        this.element.setAttribute("tabindex", "0");
-        this.element.setAttribute("role", "button");
       }
     }
+    this.element.setAttribute("tabindex", "0");
+    this.element.setAttribute("role", "button");
     this.element.classList.add("interactive");
     var controller = this;
     if (onClick != undefined) {
@@ -125,6 +164,9 @@ class AnimapperInteractive {
   }
 }
 
+/**
+ * Handles Animations
+ */
 class AnimapperAnimation {
   constructor(element) {
     this.element = element;
@@ -138,6 +180,9 @@ class AnimapperAnimation {
     }
   }
 
+  /**
+   * Starting Animation
+   */
   start() {
     var controller = this;
     this.stop();
@@ -146,6 +191,9 @@ class AnimapperAnimation {
     }, 80);
   }
 
+  /**
+   * Render Animation
+   */
   render() {
     this.frames[this.current].style.display = "none";
 
@@ -157,6 +205,9 @@ class AnimapperAnimation {
     this.frames[this.current].style.display = "block";
   }
 
+  /**
+   * Stopps Animation
+   */
   stop() {
     if (this.animation) {
       clearInterval(this.animation);

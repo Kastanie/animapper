@@ -10,8 +10,16 @@
 
 <body>
 
-    <div id="map">Loading Map</div>
+    <h1>Animapper</h1>
+    <p>Animapper is a small library to animate svgs and make them interactive. It combines a <a
+            href="./assets/example.ai" title="Explore AI-File" download>svg</a> created with Adobe Illustrator and data
+        from a <a href="./assets/data.json" title="Explore the JSON-File" download>JSON-File</a>. Special
+        layer-name-parts defines animations and interactive objects.</p>
 
+    <!-- Wrapper-Element for animapper-graphic -->
+    <div id="map">Loading Animapper-Example</div>
+
+    <!-- Modal-Template -->
     <div id="modal" class="w-modal">
         <div class="w-modal-content">
             <div class="w-container">
@@ -23,17 +31,23 @@
         </div>
     </div>
 
+    <!-- Adding Animapper-Script -->
     <script src="./js/Animapper.js"></script>
     <script>
+
+        /**
+         * Animapper usage
+         */
         var am = new Animapper('./assets/example.svg', './assets/data.json', document.getElementById("map"),
             function (e) {
-                console.log(e);
+                //e.data = related data from json, if existing
+                //e.element = clicked element
 
+                //Preparing Modal
                 var modal = document.getElementById('modal');
-
-
                 if ("data" in e) {
                     if (e.data != null) {
+                        //Open Modal
                         for (var attr in e.data) {
 
                             var obj = modal.querySelectorAll(`[attribute*="` + attr + `"]`);
@@ -42,6 +56,7 @@
                                 obj[0].innerHTML = e.data[attr];
                             }
                         }
+                        //Playing Sound
                         if ("sound" in e.data) {
                             if (e.data.sound.indexOf('.mp3') != -1) {
                                 var audio = new Audio(e.data.sound);
@@ -50,10 +65,7 @@
                         }
                         modal.style.display = "block";
                     }
-
-
                 }
-
             }
         );
     </script>
