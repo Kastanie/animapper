@@ -35,7 +35,6 @@ class Animapper {
       controller._onSVGLoaded();
     };
     xhr.onprogress = function (e) {
-      console.log(e);
       if (e.lengthComputable) {
         var percentComplete = Math.floor((e.loaded / e.total) * 100);
         controller.element.innerHTML =
