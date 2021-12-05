@@ -51,7 +51,6 @@
                         for (var attr in e.data) {
 
                             var obj = modal.querySelectorAll(`[attribute*="` + attr + `"]`);
-                            console.log(obj, e.data[attr]);
                             if (obj.length) {
                                 obj[0].innerHTML = e.data[attr];
                             }
